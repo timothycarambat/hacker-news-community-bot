@@ -6,12 +6,7 @@ const TwitterClient = require('twitter-api-client').TwitterClient;
 const twitterClient = new TwitterClient(config.twitter);
 admin.initializeApp();
 
-exports.scheduledFunction = functions.pubsub.schedule('0 * * * *').onRun(async (context) => {
-  if (process.env.NODE_ENV !== 'production') { 
-    console.log('Cron only runs on production - doing nothing')
-    return false
-  }
-
+exports.hourlyTweetCron = functions.pubsub.schedule('*/30 * * * *').onRun(async (context) => {
   const tweetIds = await tweetCommentLink()
   console.log(`Added Comment to ${tweetIds.length} tweets.`);
   return null;
